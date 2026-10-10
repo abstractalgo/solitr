@@ -42,8 +42,9 @@ images/original/paris-….svg     the vector card deck the card images were rend
    plain classes in `decompiled/js/`, keeping the original class, method and variable names and
    the same logic and timings. Spider and Mahjong were left out.
 4. **Extracted images.** `tools/extract-css-images.py` writes the embedded images to
-   `decompiled/images/{1x,2x}/`. `tools/generate-cards-css.py` writes `css/cards.css`, which
-   uses `image-set()` to pick 1x or 2x images.
+   `decompiled/images/{1x,2x}/`. `tools/generate-cards-css.py` embeds them back into
+   `css/cards-1x.css` / `css/cards-2x.css` as data URIs, like the original, so no card ever
+   shows up blank while its image downloads.
 5. **Verified.** `tools/compare-with-original.js` plays the same scripted session on both
    versions with a seeded `Math.random`: deal, turn stock, drag, double-click to foundation,
    undo, invalid drop, recycle the waste, score toggle, win dialog. After every step it
@@ -68,7 +69,7 @@ js/rawdraggable.js                  thin jQuery UI mouse widget used for drag an
 js/main.js                          picks Turn 1/3, page-level handlers
 css/solitr.css                      header / menu / dialogs
 css/game.css                        table, card outlines
-css/cards.css                       card faces (generated)
+css/cards-1x.css, cards-2x.css      card faces as data URIs (generated from images/)
 images/1x, images/2x                card faces 79×123 / 158×246, card back, recycle icon
 vendor/                             libraries pulled from the original bundle
 ```
@@ -84,7 +85,7 @@ vendor/                             libraries pulled from the original bundle
 | Auto-finish behaviour                   | `KlondikeModel.nextAutoCommand`                                         |
 | Layout / spacing / fanning              | `calculateGeometry` in the base controller and `KlondikeController`     |
 | Animation speeds                        | `SolitaireBaseController.speeds`                                        |
-| Card artwork                            | replace PNGs in `images/1x` and `images/2x` (keep the file names); card size is `CardController.size` |
+| Card artwork                            | replace PNGs in `images/1x` and `images/2x` (keep the file names), then run `python3 tools/generate-cards-css.py`; card size is `CardController.size` |
 | A new kind of move                      | new `action`: add `doX`/`undoX` to the model, `animateX` to the controller (see `command.js`) |
 
 Debug helpers in the console: `solitaireController.dump()` returns a snippet that restores the

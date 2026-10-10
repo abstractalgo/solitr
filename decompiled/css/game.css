@@ -1,5 +1,5 @@
 /* The playing table: cards, empty-pile outlines, drag/drop helpers.
-   Card faces live in cards.css. Card size itself (79x123) is set from JS
+   Card faces live in cards-1x.css / cards-2x.css. Card size itself (79x123) is set from JS
    (CardController.size) so that geometry and CSS can't drift apart. */
 
 #solitaireCanvas {

@@ -12,7 +12,10 @@
     <link rel="stylesheet" href="css/vendor/bootstrap-toggle-2.2.0.css" />
     <link rel="stylesheet" href="css/solitr.css" />
     <link rel="stylesheet" href="css/game.css" />
-    <link rel="stylesheet" href="css/cards.css" />
+    <!-- Card images, embedded in the CSS so they're ready before the first card turns up.
+         Only the matching file blocks rendering (same 1.7 threshold as the original site). -->
+    <link rel="stylesheet" href="css/cards-1x.css" media="not all and (min-resolution: 1.7dppx)" />
+    <link rel="stylesheet" href="css/cards-2x.css" media="(min-resolution: 1.7dppx)" />
     <link rel="stylesheet" href="css/solver.css" />
 
     <!-- Libraries, in the order they appeared in the original bundle -->

@@ -12,7 +12,7 @@ class CardController {
 
   appendTo(rootElement) {
     this.element = document.createElement("div");
-    // e.g. "card cardback cardqh" – see css/cards.css
+    // e.g. "card cardback cardqh" – see css/cards-1x.css
     this.element.className = ("card cardback card" + this.model.rank.letter() + this.model.suit.letter()).toLowerCase();
     this.element.id = this.model.id;
     $(this.element).css(this.constructor.size);
