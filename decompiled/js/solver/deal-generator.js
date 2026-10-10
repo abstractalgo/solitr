@@ -65,6 +65,7 @@ class DealGenerator {
       this.running = false;
       this.controller.startGame(model);
       this.showStatus(`Deal ${this.deals}: winnable in ${shortest} moves – it's on the board.`, false);
+      this.hideTimeout = setTimeout(() => this.$status.hide(), DealGenerator.FOUND_MESSAGE_MS);
       return;
     }
 
@@ -84,11 +85,15 @@ class DealGenerator {
   }
 
   showStatus(text, running) {
+    clearTimeout(this.hideTimeout); // a new message cancels a pending auto-hide
     this.$status.find(".generate-text").text(text);
     this.$status.find(".generate-stop").toggle(running);
     this.$status.show();
   }
 }
+
+// How long the "found a deal" message stays before the banner disappears.
+DealGenerator.FOUND_MESSAGE_MS = 4000;
 
 $(() => {
   const init = () => (window.solitaireController ? (window.dealGenerator = new DealGenerator(window.solitaireController)) : setTimeout(init, 10));
