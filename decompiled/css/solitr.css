@@ -32,6 +32,32 @@ body {
   height: 36px;
   font-size: 0;
 }
+/* Game timer, top right (js/timer.js). Click toggles between the time and a dim "--:--". */
+.solitr-timer {
+  /* Right edge lines up with the "Undo" text below: the menu bar contents are
+     705px wide and menu items have 20px of right padding. */
+  position: absolute;
+  top: 0;
+  left: 685px;
+  transform: translateX(-100%);
+  white-space: nowrap;
+  font-size: 16px;
+  line-height: 36px;
+  color: #333;
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+}
+.solitr-timer-placeholder {
+  display: none;
+}
+/* Hidden: show a dim placeholder so there's still something to click */
+.solitr-timer.time-hidden .solitr-timer-text {
+  display: none;
+}
+.solitr-timer.time-hidden .solitr-timer-placeholder {
+  display: inline;
+  color: #bbb;
+}
 .solitr-tab {
   vertical-align: top;
   margin: 5px 0 0 20px;

@@ -52,6 +52,9 @@
         <span class="active solitr-tab solitaire-tab"
           ><span class="solitaire-icon">♠</span><span class="solitr-tab-bar-text">&nbsp;Solitaire</span></span
         >
+        <div id="game-timer" class="solitr-timer"
+          ><span class="solitr-timer-text">00:00</span><span class="solitr-timer-placeholder">--:--</span></div
+        >
       </div>
       <div class="solitr-menu-bar solitaire-menu-bar">
         <div class="solitaire-menu-bar-contents">
@@ -92,7 +95,7 @@
           </div>
           <a class="solitr-menu-item solitr-check-winnable" tabindex="0">Check</a>
           <span class="solitr-generate-group"
-            ><input id="generate-max-moves" type="text" inputmode="numeric" maxlength="3" value="80" title="Maximum moves to win"
+            ><input id="generate-max-moves" type="text" inputmode="numeric" maxlength="3" value="50" title="Maximum moves to win"
             /><a class="solitr-menu-item solitr-generate" tabindex="0">Find deal</a></span
           >
           <a class="solitr-menu-item solitr-menu-item-right solitr-undo-button" tabindex="1"
@@ -169,6 +172,7 @@
 
     <div class="solitaire-root" id="solitaireCanvas"></div>
 
+    <script src="js/timer.js"></script>
     <script src="js/main.js"></script>
   </body>
 </html>

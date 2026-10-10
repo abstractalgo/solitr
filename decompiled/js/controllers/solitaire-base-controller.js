@@ -479,6 +479,7 @@ class SolitaireBaseController {
 
   youWin() {
     this.suspendUi();
+    this.model.finishedAt = Date.now();
     let win = "<p>Time: " + this.model.getTime() + "</p>";
     if (this.model.scoreForCommand && this.displayScore()) win += "<p>Score: " + this.model.score + "</p>";
     $("#win-modal .modal-body .score").html(win);

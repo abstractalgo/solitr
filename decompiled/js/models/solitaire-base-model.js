@@ -17,7 +17,8 @@ class SolitaireBaseModel {
     // that follow it (flips, auto-finish moves) form one group, so a single
     // Undo reverts all of them.
     this.undoStack = [];
-    this.startedAt = null;
+    this.startedAt = null; // set on the first move
+    this.finishedAt = null; // set when the game is won; stops the clock
     this.score = 0;
   }
 
@@ -31,7 +32,8 @@ class SolitaireBaseModel {
 
   // Elapsed time as "mm:ss".
   getTime() {
-    const time = typeof this.startedAt === "number" ? Math.floor((Date.now() - this.startedAt) / 1000) : 0;
+    const end = this.finishedAt || Date.now();
+    const time = typeof this.startedAt === "number" ? Math.floor((end - this.startedAt) / 1000) : 0;
     const min = Math.floor(time / 60);
     const sec = time - 60 * min;
     return (min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec);
