@@ -1,4 +1,4 @@
-/* "Check Winnable" panel (js/solver/solver-ui.js). */
+/* "Check" panel (js/solver/solver-ui.js). */
 
 /* Shown instead of #solitaireCanvas, in the same place below the menu bar. */
 #solver-panel {
@@ -211,7 +211,24 @@
   text-shadow: 0 0 4px #000;
 }
 
-/* Banner shown while a solver position is on the board */
+/* "Find deal" input in the menu bar (js/solver/deal-generator.js) */
+.solitr-generate-group {
+  display: inline-block;
+  margin-left: 10px;
+}
+#generate-max-moves {
+  width: 44px;
+  text-align: center;
+  height: 24px;
+  font-size: 14px;
+  padding: 0 4px;
+  vertical-align: 1px;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+}
+
+/* Status lines under the menu bar */
+#generate-status,
 #solver-banner {
   display: none;
   position: relative;
@@ -221,6 +238,7 @@
   border-bottom: 1px solid #f0d58c;
   font-size: 13px;
 }
+#generate-status .btn,
 #solver-banner .btn {
   margin-left: 8px;
 }

@@ -1,4 +1,4 @@
-// "Check Winnable" button and the solver panel: result summary, graph of the
+// "Check" button and the solver panel: result summary, graph of the
 // explored positions, and an inspector for the selected position.
 //
 // Graph: one dot per position, laid out left to right by number of moves from
@@ -12,7 +12,7 @@ class SolverPanel {
     this.$panel = $("#solver-panel");
     this.$banner = $("#solver-banner");
     this.solver = null;
-    this.rootDump = null; // the game as it was when "Check Winnable" was pressed
+    this.rootDump = null; // the game as it was when "Check" was pressed
     this.selected = null;
 
     $(document).on("click", ".solitr-check-winnable", () => this.open());

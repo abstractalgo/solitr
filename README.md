@@ -98,8 +98,8 @@ dropped. Setting `window.SOLITR_WIN = true` makes the next move trigger the win 
 - One page with `?turn=1` instead of two separate pages.
 - Added `<meta charset="utf-8">`. The original page has no charset, so the ♠ in the tab can show
   as garbled text.
-- The About dialog is rewritten (credits kept). The original was the site owner's contact and
-  company details.
+- No About dialog (the original had the site owner's contact and company details, and the
+  card-art credit: Richard Hoelscher's vector version of Grimaud's "Paris pattern" deck).
 - `loadHash` (debug only) restores `SolitaireCommand.prototype` correctly. The original set
   `__proto__` to the constructor.
 - `.dummy { visibility: none }` (invalid) became `hidden`. The element is empty, so nothing looks different.

@@ -81,8 +81,14 @@ class SolitaireBaseController {
   }
 
   newGame() {
-    this.model = new this.constructor.ModelClass();
-    this.model.deal();
+    const model = new this.constructor.ModelClass();
+    model.deal();
+    this.startGame(model);
+  }
+
+  // Shows an already dealt model on the board (used by newGame and the deal generator).
+  startGame(model) {
+    this.model = model;
     for (const id in this.cardControllers || {}) this.cardControllers[id].destroy();
     this.cardControllers = {};
     for (const card of this.model.deck) {

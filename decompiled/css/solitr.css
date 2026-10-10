@@ -32,18 +32,6 @@ body {
   height: 36px;
   font-size: 0;
 }
-.solitr-small-links-container {
-  font-size: 9px;
-  color: #777;
-  float: right;
-  line-height: 34px;
-  margin-right: 20px;
-}
-.solitr-small-link {
-  color: inherit;
-  text-decoration: underline;
-  cursor: pointer;
-}
 .solitr-tab {
   vertical-align: top;
   margin: 5px 0 0 20px;

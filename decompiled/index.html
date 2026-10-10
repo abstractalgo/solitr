@@ -36,10 +36,11 @@
     <script src="js/controllers/solitaire-base-controller.js"></script>
     <script src="js/controllers/klondike-controller.js"></script>
 
-    <!-- "Check Winnable" solver -->
+    <!-- "Check" solver -->
     <script src="js/solver/solver-state.js"></script>
     <script src="js/solver/solver.js"></script>
     <script src="js/solver/solver-ui.js"></script>
+    <script src="js/solver/deal-generator.js"></script>
   </head>
   <body>
     <div class="solitr-header">
@@ -48,9 +49,6 @@
         <span class="active solitr-tab solitaire-tab"
           ><span class="solitaire-icon">♠</span><span class="solitr-tab-bar-text">&nbsp;Solitaire</span></span
         >
-        <div class="solitr-small-links-container">
-          <a class="solitr-small-link" data-toggle="modal" href="#about-modal">About</a>
-        </div>
       </div>
       <div class="solitr-menu-bar solitaire-menu-bar">
         <div class="solitaire-menu-bar-contents">
@@ -89,7 +87,11 @@
               </li>
             </ul>
           </div>
-          <a class="solitr-menu-item solitr-check-winnable" tabindex="0">Check Winnable</a>
+          <a class="solitr-menu-item solitr-check-winnable" tabindex="0">Check</a>
+          <span class="solitr-generate-group"
+            ><input id="generate-max-moves" type="text" inputmode="numeric" maxlength="3" value="80" title="Maximum moves to win"
+            /><a class="solitr-menu-item solitr-generate" tabindex="0">Find deal</a></span
+          >
           <a class="solitr-menu-item solitr-menu-item-right solitr-undo-button" tabindex="1"
             ><div class="undo-icon"></div>
             &nbsp;Undo</a
@@ -97,32 +99,6 @@
           <span class="solitr-menu-item solitr-menu-item-right solitr-status-item" id="game-score"
             >Score:&nbsp;<span>0</span></span
           >
-        </div>
-      </div>
-    </div>
-
-    <div class="modal fade" id="about-modal">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <h4 class="modal-title">About Solitr</h4>
-          </div>
-          <div class="modal-body">
-            <p>
-              This is a locally modified copy of the solitaire game from
-              <a href="https://www.solitr.com/">solitr.com</a>, originally created by Jo Liss in November 2011.
-            </p>
-            <h4>Credits</h4>
-            <p>
-              Card images are based on Richard Hoelscher's vector version of Grimaud's 19th-century "Paris
-              pattern" card deck (see the
-              <a href="https://web.archive.org/web/20110910064024/http://rahga.com/svg/">archived page</a>).
-            </p>
-          </div>
-          <div class="modal-footer"><a class="btn btn-primary" data-dismiss="modal" href="#">Close</a></div>
         </div>
       </div>
     </div>
@@ -145,6 +121,11 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <div id="generate-status">
+      <span class="generate-text"></span>
+      <a class="btn btn-default btn-xs generate-stop">Stop</a>
     </div>
 
     <div id="solver-banner">
