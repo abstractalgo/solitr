@@ -1,0 +1,61 @@
+/* The playing table: cards, empty-pile outlines, drag/drop helpers.
+   Card faces live in cards.css. Card size itself (79x123) is set from JS
+   (CardController.size) so that geometry and CSS can't drift apart. */
+
+#solitaireCanvas {
+  position: relative;
+  top: 0;
+  left: 0;
+  min-height: 515px;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  cursor: default;
+}
+
+.card {
+  position: absolute;
+  /* Flip animation scales around this point (see CardController.animateToRestingFace) */
+  transform-origin: 20px 0;
+  will-change: opacity;
+}
+
+/* Empty-pile outlines sit in .baseContainer underneath all cards */
+.baseContainer {
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  top: 0;
+}
+.baseCardElement {
+  position: absolute;
+}
+.baseCardElement,
+.card {
+  background-position: 0 0;
+  background-size: 100% 100%;
+  border: 1.5px solid #000;
+  border-radius: 6px;
+  box-sizing: border-box;
+  background-origin: border-box;
+  box-shadow: 0 1px rgba(0, 0, 0, 0.05);
+}
+.foundationBase,
+.tableauPileBase,
+.turnOverWasteImage {
+  border: 1.5px solid #999;
+  box-shadow: none;
+}
+
+/* Debug overlay drawn by SolitaireBaseController._visualizeDropZones() */
+.visualization {
+  background-color: #080;
+  opacity: 0.2;
+  position: absolute;
+  z-index: 1000000;
+}
+
+/* Hidden element that primes jquery.transform's scale hook */
+.dummy {
+  visibility: hidden;
+}

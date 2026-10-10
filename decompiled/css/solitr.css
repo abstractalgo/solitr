@@ -1,0 +1,237 @@
+/* Page chrome: header, tab bar, menu bar, options dropdown, win modal.
+   Taken from solitr.com's solitaire-1x.css with Spider/Mahjong/Sudoku/cookie-banner rules removed. */
+
+a {
+  text-decoration: none;
+}
+html.solitairePage,
+html.solitairePage body {
+  width: 100%;
+  height: 100%;
+}
+body {
+  height: 100%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* ---- Header / tab bar ---------------------------------------------------- */
+
+.solitr-header {
+  position: relative;
+  z-index: 1900;
+  width: 100%;
+  font-family: Segoe UI, Helvetica Neue, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+.solitr-tab-bar {
+  overflow: hidden;
+  height: 36px;
+  font-size: 0;
+}
+.solitr-small-links-container {
+  font-size: 9px;
+  color: #777;
+  float: right;
+  line-height: 34px;
+  margin-right: 20px;
+}
+.solitr-small-link {
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.solitr-tab {
+  vertical-align: top;
+  margin: 5px 0 0 20px;
+  display: inline-block;
+  padding: 0 20px;
+  height: 31px;
+  border-radius: 5px 5px 0 0;
+  z-index: 0;
+  position: relative;
+  border: 1px solid #ddd;
+  border-bottom: none;
+  background: #fff;
+  font-size: 16px;
+  text-decoration: none;
+  color: #555;
+  line-height: 28px;
+}
+.solitr-tab.active {
+  box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.07);
+  z-index: 2;
+  position: relative;
+}
+.solitr-tab.active,
+.solitr-tab:hover {
+  text-decoration: none;
+  color: #222;
+}
+.solitr-brand,
+span.solitr-tab.active {
+  cursor: default;
+}
+.solitr-brand {
+  vertical-align: top;
+  margin: 0 0 0 20px;
+  color: #333;
+  display: inline-block;
+  height: 36px;
+  font-size: 22px;
+  line-height: 36px;
+}
+@media (max-width: 800px) {
+  .solitr-tab-bar-text {
+    display: none;
+  }
+  .solitr-tab {
+    padding: 0 15px;
+  }
+}
+@media (max-width: 510px) {
+  .solitr-brand {
+    display: none;
+  }
+}
+
+/* ---- Menu bar -------------------------------------------------------------- */
+
+.solitaire-menu-bar,
+.solitaire-menu-bar ul.dropdown-menu,
+.solitaire-tab,
+.solitaire-tab ul.dropdown-menu {
+  background: #ececf9;
+}
+.solitaire-tab.active,
+.solitaire-tab:hover {
+  background: linear-gradient(to bottom, #e0e0f5, #ececf9 70%, #ececf9);
+}
+.solitr-menu-bar {
+  width: 100%;
+  height: 35px;
+  box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.07);
+  z-index: 1;
+  position: relative;
+  font-size: 0;
+}
+.solitr-menu-bar .btn.active {
+  cursor: default;
+}
+.solitaire-menu-bar-contents {
+  width: 705px;
+}
+.solitr-menu-item {
+  display: inline-block;
+  font-size: 16px;
+  line-height: 35px;
+  margin: 0 0;
+  padding: 0 20px;
+  cursor: pointer;
+  color: #000;
+  opacity: 0.95;
+  transition: opacity 0.1s ease-out;
+  will-change: opacity;
+}
+.solitr-dropdown-menu-wrapper.open .solitr-menu-item,
+.solitr-menu-item:focus,
+.solitr-menu-item:hover {
+  outline: 0;
+  text-decoration: none;
+  color: #000;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0.3)
+  );
+}
+.solitr-menu-item.disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.solitr-menu-item.disabled:hover {
+  background: 0 0;
+}
+.solitr-menu-item-right {
+  float: right;
+}
+.solitr-dropdown-menu-wrapper {
+  display: inline-block;
+  position: relative;
+}
+.solitr-dropdown-button-item > .btn,
+.solitr-dropdown-button-item > .btn-group {
+  margin-left: 20px;
+}
+
+/* "Turn 1" / "Turn 3" mini card icons in the Options dropdown */
+.turn-one-icon,
+.turn-three-icon {
+  position: relative;
+  top: 3px;
+  height: 16px;
+  display: inline-block;
+}
+.turn-one-icon {
+  width: 12px;
+}
+.turn-three-icon {
+  width: 18px;
+}
+.blank-card-icon,
+.blank-card-icon-1,
+.blank-card-icon-2,
+.blank-card-icon-3 {
+  border: 1px solid #222;
+  border-radius: 3px;
+  position: absolute;
+  width: 12px;
+  height: 16px;
+}
+.blank-card-icon-1 {
+  border-radius: 3px 0 0 3px;
+  border-right: none;
+}
+.blank-card-icon-2 {
+  left: 3px;
+  border-radius: 3px 0 0 3px;
+  border-right: none;
+}
+.blank-card-icon-3 {
+  left: 6px;
+}
+
+.undo-icon {
+  background-image: url(../images/undo-icon.svg);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  position: relative;
+  top: 4px;
+  opacity: 0.8;
+}
+
+/* Score readout, only shown when the "Display score" option is on */
+#game-score {
+  display: none;
+}
+#game-score.active {
+  display: block;
+}
+.solitr-status-item {
+  font-size: 12px;
+  cursor: default;
+}
+.solitr-status-item:hover {
+  background: inherit;
+}
+
+.win-modal .modal-dialog {
+  margin: 250px auto 30px;
+}

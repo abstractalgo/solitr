@@ -1,0 +1,18 @@
+{
+  "name": "solitr-decompile-tools",
+  "private": true,
+  "description": "Scripts used to turn original/ into decompiled/",
+  "scripts": {
+    "decompile-vendor": "./decompile-vendor.sh",
+    "compare": "node compare-with-original.js"
+  },
+  "dependencies": {
+    "@babel/generator": "^7.26.0",
+    "@babel/parser": "^7.26.0",
+    "@babel/traverse": "^7.26.0",
+    "@babel/types": "^7.26.0",
+    "prettier": "^3.3.0",
+    "puppeteer-core": "^23.0.0",
+    "source-map": "^0.7.4"
+  }
+}

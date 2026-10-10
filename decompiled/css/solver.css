@@ -1,0 +1,255 @@
+/* "Check Winnable" panel (js/solver/solver-ui.js). */
+
+/* Shown instead of #solitaireCanvas, in the same place below the menu bar. */
+#solver-panel {
+  display: none;
+  height: calc(100vh - 71px); /* viewport minus tab bar (36px) and menu bar (35px) */
+  min-height: 515px;
+  background: #fff;
+  font-family: Segoe UI, Helvetica Neue, sans-serif;
+  flex-direction: column;
+}
+#solver-panel.open {
+  display: flex;
+}
+.solver-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  border-bottom: 1px solid #ddd;
+  font-size: 15px;
+}
+.solver-summary {
+  flex: 1;
+}
+.solver-stats {
+  color: #777;
+  font-size: 13px;
+  margin-left: 8px;
+}
+.solver-yes {
+  color: #1a8a1a;
+}
+.solver-no {
+  color: #c62828;
+}
+.solver-unknown {
+  color: #b26a00;
+}
+.solver-legend {
+  font-size: 12px;
+  color: #555;
+}
+.solver-legend span {
+  margin-left: 10px;
+  white-space: nowrap;
+}
+.solver-legend i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 3px;
+  vertical-align: -1px;
+}
+.solver-body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+.solver-graph {
+  flex: 1;
+  overflow: auto;
+  border-right: 1px solid #ddd;
+  background: #fafafa;
+}
+.solver-inspector {
+  width: 400px;
+  overflow: auto;
+  padding: 10px 14px;
+  font-size: 13px;
+}
+.solver-inspector h5 {
+  margin: 12px 0 4px;
+  font-weight: bold;
+}
+.solver-inspector ol,
+.solver-inspector ul {
+  padding-left: 22px;
+  margin: 0;
+}
+.solver-inspector li[data-node] {
+  cursor: pointer;
+}
+.solver-inspector li[data-node]:hover {
+  text-decoration: underline;
+}
+.solver-inspector li.current {
+  font-weight: bold;
+}
+.solver-stock {
+  color: #555;
+  margin-top: 4px;
+}
+
+/* Graph */
+.solver-edge {
+  fill: none;
+  stroke: #bbb;
+  stroke-width: 1.5;
+}
+.solver-edge-path,
+.solver-edge-win {
+  stroke: #1a8a1a;
+  stroke-width: 3;
+}
+.solver-merge {
+  fill: none;
+  stroke: #7b61ff;
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  opacity: 0.35;
+}
+.solver-merge-win {
+  stroke: #1a8a1a;
+  opacity: 0.6;
+}
+.solver-merge.selected {
+  opacity: 1;
+  stroke-width: 2;
+}
+.solver-node {
+  cursor: pointer;
+  stroke: #fff;
+  stroke-width: 1.5;
+}
+.solver-node.selected {
+  stroke: #000;
+  stroke-width: 3;
+}
+.solver-win,
+.solver-legend .solver-win {
+  fill: #1a8a1a;
+  background: #1a8a1a;
+}
+.solver-path,
+.solver-legend .solver-path {
+  fill: #6cc06c;
+  background: #6cc06c;
+}
+.solver-dead,
+.solver-legend .solver-dead {
+  fill: #e57373;
+  background: #e57373;
+}
+.solver-stuck,
+.solver-legend .solver-stuck {
+  fill: #8b0000;
+  background: #8b0000;
+}
+.solver-open,
+.solver-legend .solver-open {
+  fill: #bbb;
+  background: #bbb;
+}
+.solver-legend .solver-merge-key {
+  border-radius: 0;
+  height: 0;
+  border-top: 2px dashed #7b61ff;
+}
+.solver-root {
+  stroke: #000;
+}
+.solver-li-win,
+.solver-li-path {
+  color: #1a8a1a;
+}
+.solver-li-dead,
+.solver-li-stuck {
+  color: #c62828;
+}
+.solver-li-merge {
+  color: #7b61ff;
+}
+
+/* Miniature board (half size) */
+.solver-board {
+  margin-top: 6px;
+  overflow: hidden;
+}
+.solver-board-inner {
+  position: relative;
+  transform: scale(0.5);
+  transform-origin: 0 0;
+}
+.solver-card {
+  position: absolute;
+  width: 79px;
+  height: 123px;
+  background-size: 100% 100%;
+  border: 1.5px solid #000;
+  border-radius: 6px;
+  box-sizing: border-box;
+  background-origin: border-box;
+}
+.solver-base {
+  border-color: #999;
+}
+.solver-facedown {
+  filter: brightness(0.7) saturate(0.5);
+}
+.solver-count {
+  position: absolute;
+  width: 79px;
+  top: 0;
+  text-align: center;
+  margin-top: 45px;
+  font-size: 26px;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 0 4px #000;
+}
+
+/* Banner shown while a solver position is on the board */
+#solver-banner {
+  display: none;
+  position: relative;
+  z-index: 1;
+  padding: 6px 20px;
+  background: #fff8e1;
+  border-bottom: 1px solid #f0d58c;
+  font-size: 13px;
+}
+#solver-banner .btn {
+  margin-left: 8px;
+}
+
+/* Clickable list of wins at the top of the inspector */
+.solver-wins {
+  margin-bottom: 10px;
+  max-height: 110px;
+  overflow: auto;
+  border-bottom: 1px solid #eee;
+}
+.solver-wins h5 {
+  margin-top: 0;
+}
+.solver-win-chip {
+  display: inline-block;
+  margin: 0 6px 6px 0;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #e6f4e6;
+  color: #1a8a1a;
+  font-size: 12px;
+  cursor: pointer;
+}
+.solver-win-chip:hover {
+  text-decoration: none;
+  background: #cfeacf;
+}
+.solver-win-chip.current {
+  background: #1a8a1a;
+  color: #fff;
+}
