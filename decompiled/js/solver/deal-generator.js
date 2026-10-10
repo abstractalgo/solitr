@@ -13,6 +13,14 @@ class DealGenerator {
     this.running = false;
 
     $(document).on("click", ".solitr-generate", () => this.start());
+    // Focusing clears the box for typing; leaving it empty puts the old number back.
+    $(document).on("focus", "#generate-max-moves", (e) => {
+      this.previousMaxMoves = e.target.value;
+      e.target.value = "";
+    });
+    $(document).on("blur", "#generate-max-moves", (e) => {
+      if (!e.target.value) e.target.value = this.previousMaxMoves;
+    });
     // Digits only (maxlength="3" in index.html caps it at 999).
     $(document).on("input", "#generate-max-moves", (e) => {
       e.target.value = e.target.value.replace(/\D/g, "");
