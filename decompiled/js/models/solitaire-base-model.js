@@ -151,6 +151,29 @@ class SolitaireBaseModel {
     return hash;
   }
 
+  // Everything needed to bring the game back later (undo past "New Game",
+  // reloading the page): the shuffled deck, the piles with the undo history,
+  // the score and the time played so far. The clock is paused while a game is
+  // stored, so `elapsed` is saved instead of `startedAt`.
+  toSnapshot() {
+    return {
+      deck: this.deck.map((card) => [card.rank.value, card.suit.value]),
+      hash: this.dumpHash(),
+      score: this.score,
+      elapsed: this.startedAt == null ? null : (this.finishedAt || Date.now()) - this.startedAt,
+      finished: this.finishedAt != null,
+    };
+  }
+
+  static fromSnapshot(snapshot) {
+    const model = new this(snapshot.deck.map(([rank, suit]) => new CardModel(solitaireRanks[rank], solitaireSuits[suit])));
+    model.loadHash(snapshot.hash);
+    model.score = snapshot.score;
+    if (snapshot.elapsed != null) model.startedAt = Date.now() - snapshot.elapsed;
+    if (snapshot.finished) model.finishedAt = Date.now();
+    return model;
+  }
+
   loadHash(hash) {
     const deckCopy = this.deck.slice(0);
     for (const locator of this.allLocators()) {

@@ -18,6 +18,9 @@
 class SolitaireBaseController {
   constructor() {
     this.model = null;
+    // Games replaced by New Game / Find deal, oldest first. Undo with nothing
+    // left to undo brings the last one back. Stored as model snapshots.
+    this.previousGames = [];
   }
 
   // Entry point used by the page: KlondikeTurnThreeController.setupGame().
@@ -39,7 +42,7 @@ class SolitaireBaseController {
     this.calculateGeometry();
     this.appendBaseElements();
     this.registerEventHandlers();
-    this.newGame();
+    this.restoreSavedGame();
   }
 
   // Spacing derived from the card size. Subclasses add pile positions.
@@ -96,8 +99,18 @@ class SolitaireBaseController {
     this.startGame(model);
   }
 
-  // Shows an already dealt model on the board (used by newGame and the deal generator).
+  // Shows an already dealt model on the board (used by newGame and the deal
+  // generator). The game it replaces can be brought back with Undo, unless it
+  // was won.
   startGame(model) {
+    if (this.model && !this.model.finishedAt) {
+      this.previousGames.push(this.model.toSnapshot());
+      this.previousGames.splice(0, this.previousGames.length - SolitaireBaseController.MAX_PREVIOUS_GAMES);
+    }
+    this.showGame(model);
+  }
+
+  showGame(model) {
     this.model = model;
     $("#win-modal").modal("hide");
     $(".solitr-replay").removeClass("visible");
@@ -175,7 +188,7 @@ class SolitaireBaseController {
       }
     }
 
-    $(".solitr-undo-button").toggleClass("disabled", this.model.undoStack.length === 0);
+    $(".solitr-undo-button").toggleClass("disabled", this.model.undoStack.length === 0 && this.previousGames.length === 0);
     $("#game-score").toggleClass("active", this.displayScore());
     $("#game-score span").text("" + this.model.score);
     window.GAME_IN_PROGRESS = this.model.undoStack.length > 6;
@@ -198,9 +211,13 @@ class SolitaireBaseController {
   }
 
   // Undo the most recent command group, one command at a time (newest first).
+  // With nothing left to undo, goes back to the previous game.
   undo(e) {
     if (e != null) e.preventDefault();
-    if (this.model.undoStack.length === 0) return;
+    if (this.model.undoStack.length === 0) {
+      if (this.previousGames.length) this.showGame(this.constructor.ModelClass.fromSnapshot(this.previousGames.pop()));
+      return;
+    }
     this.suspendUi();
     const commandList = last(this.model.undoStack);
     const cmd = commandList.pop();
@@ -465,6 +482,35 @@ class SolitaireBaseController {
     );
   }
 
+  // ---- Saving the game in localStorage ------------------------------------------
+  // The current game and previousGames are saved whenever the board settles and
+  // when the page is left, and restored on the next visit.
+
+  saveGame() {
+    if (!this.model) return;
+    try {
+      window.store.set(SolitaireBaseController.SAVE_KEY, { current: this.model.toSnapshot(), previous: this.previousGames });
+    } catch (_e) {
+      // Storage full or unavailable: the game just isn't kept.
+    }
+  }
+
+  restoreSavedGame() {
+    $(document).on("solitr-board-settled", () => this.saveGame());
+    $(window).on("pagehide", () => this.saveGame());
+    let saved = null;
+    let model = null;
+    try {
+      saved = window.store.get(SolitaireBaseController.SAVE_KEY);
+      this.previousGames = (saved && saved.previous) || [];
+      if (saved && saved.current && !saved.current.finished) model = this.constructor.ModelClass.fromSnapshot(saved.current);
+    } catch (_e) {
+      model = null; // unreadable save (e.g. from an older version): start fresh
+    }
+    if (model) this.showGame(model);
+    else this.newGame();
+  }
+
   // ---- Debug helpers (call from the console via window.solitaireController) ----
 
   // Returns a JS snippet that restores the current position: paste it back into the console.
@@ -515,6 +561,9 @@ class SolitaireBaseController {
     return Boolean($("#solitr-option-score").prop("checked"));
   }
 }
+
+SolitaireBaseController.SAVE_KEY = "solitr-saved-game";
+SolitaireBaseController.MAX_PREVIOUS_GAMES = 20;
 
 // Animation timings (jQuery animate options). Durations in ms.
 SolitaireBaseController.speeds = {
