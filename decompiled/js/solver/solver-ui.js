@@ -1,8 +1,11 @@
 // "Check" button and the solver panel: result summary, graph of the
 // explored positions, and an inspector for the selected position.
 //
+// The search starts from the position Check was pressed in: the deal if no move
+// has been made yet, otherwise the game as it is now.
+//
 // Graph: one dot per position, laid out left to right by number of moves from
-// the start. Solid lines are moves to new positions; dashed lines are moves
+// that position. Solid lines are moves to new positions; dashed lines are moves
 // that led to a position already seen (merges). Colours: see the legend in
 // index.html / css/solver.css.
 
@@ -13,6 +16,7 @@ class SolverPanel {
     this.$banner = $("#solver-banner");
     this.solver = null;
     this.rootDump = null; // the game as it was when "Check" was pressed
+    this.rootName = null; // what the graph's root is called: the deal, or the position mid-game
     this.selected = null;
 
     $(document).on("click", ".solitr-check-winnable", () => this.open());
@@ -34,6 +38,7 @@ class SolverPanel {
     if (this.controller.uiSuspended) return;
     const model = this.controller.model;
     this.rootDump = JSON.stringify(model.dumpHash());
+    this.rootName = model.undoStack.length ? "now" : "deal";
     this.solver = new KlondikeSolver(SolverState.fromModel(model)).run();
     this.$banner.hide();
     this.renderSummary();
@@ -109,7 +114,7 @@ class SolverPanel {
       parts.push(`<path class="solver-edge solver-edge-${node.status}" d="M${x(parent)},${y(parent)} L${x(parent) + COL / 2},${y(node)} L${x(node)},${y(node)}"/>`);
     }
     for (const node of nodes) {
-      const label = node.parent === null ? "Start" : this.escape(nodes[node.parent].state.describe(node.move));
+      const label = node.parent === null ? (this.rootName === "now" ? "Now" : "Deal") : this.escape(nodes[node.parent].state.describe(node.move));
       parts.push(
         `<circle class="solver-node solver-${node.status}${node.parent === null ? " solver-root" : ""}" data-node="${node.id}" cx="${x(node)}" cy="${y(node)}" r="${node.status === "win" || node.parent === null ? 7 : 5}"><title>#${node.id}: ${label} (${node.status})</title></circle>`,
       );
@@ -146,12 +151,13 @@ class SolverPanel {
       ...node.merges.map((m) => `<li data-node="${m.to}" class="solver-li-merge">${this.escape(node.state.describe(m.move))} <i>→ same as #${m.to}</i></li>`),
     ].join("");
 
-    this.$panel.find(".solver-inspector-title").html(`Position #${node.id} · ${node.depth} moves from start · ${statusText}`);
+    this.$panel.find(".solver-inspector-title").html(`Position #${node.id} · ${node.depth} moves from ${this.rootName === "now" ? "now" : "the deal"} · ${statusText}`);
     this.$panel.find(".solver-board").html(this.renderBoard(node.state));
     this.$panel.find(".solver-stock").text(
       node.state.stock.length ? "Stock (next card first): " + node.state.stock.slice().reverse().map(solverCardName).join(" ") : "Stock: empty",
     );
-    this.$panel.find(".solver-moves-path").html(pathItems || "<li><i>(start position)</i></li>");
+    this.$panel.find(".solver-moves-path-title").text(this.rootName === "now" ? "Moves from the current position" : "Moves from the deal");
+    this.$panel.find(".solver-moves-path").html(pathItems || `<li><i>(${this.rootName === "now" ? "current position" : "position as dealt"})</i></li>`);
     this.$panel.find(".solver-moves-next").html(nextItems || "<li><i>none</i></li>");
     this.$panel.find(".solver-win-chip").removeClass("current");
     this.$panel.find(`.solver-win-chip[data-node="${node.id}"]`).addClass("current");
