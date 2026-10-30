@@ -44,6 +44,8 @@
     <script src="js/solver/solver.js"></script>
     <script src="js/solver/solver-ui.js"></script>
     <script src="js/solver/deal-generator.js"></script>
+    <script src="js/solver/win-check.js"></script>
+    <script src="js/solver/live-check.js"></script>
   </head>
   <body>
     <div class="solitr-header">
@@ -53,6 +55,7 @@
           ><span class="solitaire-icon">♠</span><span class="solitr-tab-bar-text">&nbsp;Solitaire</span></span
         >
         <div class="solitr-timer-area"
+          ><span id="live-check" class="solitr-live-check"></span
           ><a class="btn btn-success btn-xs solitr-replay" title="Play the same deal again">Re-play</a
           ><div id="game-timer" class="solitr-timer"
             ><span class="solitr-timer-text">00:00</span><span class="solitr-timer-placeholder">--:--</span></div
@@ -75,6 +78,17 @@
                   data-toggle="toggle"
                   data-on="Score"
                   data-off="No score"
+                  data-width="128"
+                />
+              </li>
+              <li class="dropdown-header" role="presentation">Check after every move if it's still winnable?</li>
+              <li class="solitr-dropdown-button-item" role="presentation">
+                <input
+                  id="solitr-option-live-check"
+                  type="checkbox"
+                  data-toggle="toggle"
+                  data-on="Check moves"
+                  data-off="Don't check"
                   data-width="128"
                 />
               </li>

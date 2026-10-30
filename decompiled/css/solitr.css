@@ -32,7 +32,8 @@ body {
   height: 36px;
   font-size: 0;
 }
-/* Top right: "Re-play" (shown after a win) and the game timer. */
+/* Top right: the "Check every move" result (js/solver/live-check.js),
+   "Re-play" (shown after a win) and the game timer. */
 .solitr-timer-area {
   /* Right edge lines up with the "Undo" text below: the menu bar contents are
      705px wide and menu items have 20px of right padding. */
@@ -41,6 +42,18 @@ body {
   left: 685px;
   transform: translateX(-100%);
   white-space: nowrap;
+}
+.solitr-live-check {
+  display: none;
+  vertical-align: top;
+  margin-right: 14px;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 36px;
+  cursor: default;
+}
+.solitr-live-check.visible {
+  display: inline-block;
 }
 .solitr-replay {
   display: none;

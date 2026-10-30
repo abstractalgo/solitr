@@ -69,8 +69,10 @@ class SolitaireBaseController {
     this.uiSuspended = true;
   }
 
+  // Input resumes once the board has settled after a move, undo or new deal.
   resumeUi() {
     this.uiSuspended = false;
+    $(document).trigger("solitr-board-settled");
   }
 
   unlessSuspended(fn) {
@@ -473,6 +475,7 @@ class SolitaireBaseController {
   load(s) {
     this.model.loadHash(JSON.parse(s));
     this.renderAfterCommand(null);
+    $(document).trigger("solitr-board-settled");
   }
 
   _drawVisualization(rect) {
@@ -499,6 +502,7 @@ class SolitaireBaseController {
     window.GAME_IN_PROGRESS = false;
     $(".solitr-undo-button").addClass("disabled");
     $(".solitr-replay").addClass("visible");
+    $(document).trigger("solitr-board-settled");
     $("#win-modal").modal();
   }
 

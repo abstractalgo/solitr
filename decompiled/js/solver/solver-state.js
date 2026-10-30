@@ -266,10 +266,74 @@ class SolverState {
         if (--this.fHeight[from] === 0) this.fSuit[from] = -1;
         break;
     }
+    return this.flipExposed();
+  }
+
+  flipExposed() {
     for (let i = 0; i < this.up.length; i++) {
       if (!this.up[i].length && this.down[i].length) this.up[i].push(this.down[i].pop());
     }
     return this;
+  }
+
+  // Every position one legal move away, with none of generateMoves' shortcuts
+  // (safe moves, run-splitting rule, stock turns folded into moves): one stock
+  // action, the waste card to a foundation or column, a column's top card to a
+  // foundation, any face-up run to any column, a foundation card to any column.
+  // Used to confirm "unwinnable" (KlondikeSolver.confirmUnwinnable).
+  allSuccessors() {
+    const result = [];
+    const n = this.up.length;
+    if (this.stock.length || this.waste.length) {
+      const s = this.clone();
+      SolverState.stockStep(s.stock, s.waste, this.cardsToTurn);
+      result.push(s);
+    }
+    if (this.waste.length) {
+      const card = this.waste[this.waste.length - 1];
+      const slot = this.foundationSlotFor(card);
+      if (slot >= 0) {
+        const s = this.clone();
+        s.pushFoundation(slot, s.waste.pop());
+        result.push(s);
+      }
+      for (let j = 0; j < n; j++) {
+        if (!this.tableauAccepts(j, card)) continue;
+        const s = this.clone();
+        s.up[j].push(s.waste.pop());
+        result.push(s);
+      }
+    }
+    for (let i = 0; i < n; i++) {
+      const up = this.up[i];
+      if (!up.length) continue;
+      const slot = this.foundationSlotFor(up[up.length - 1]);
+      if (slot >= 0) {
+        const s = this.clone();
+        s.pushFoundation(slot, s.up[i].pop());
+        result.push(s.flipExposed());
+      }
+      for (let k = 0; k < up.length; k++) {
+        for (let j = 0; j < n; j++) {
+          if (j === i || !this.tableauAccepts(j, up[k])) continue;
+          const s = this.clone();
+          s.up[j].push(...s.up[i].splice(k));
+          result.push(s.flipExposed());
+        }
+      }
+    }
+    for (let slot = 0; slot < 4; slot++) {
+      if (!this.fHeight[slot]) continue;
+      const card = (this.fHeight[slot] - 1) * 4 + this.fSuit[slot];
+      for (let j = 0; j < n; j++) {
+        if (!this.tableauAccepts(j, card)) continue;
+        const s = this.clone();
+        s.up[j].push(card);
+        if (--s.fHeight[slot] === 0) s.fSuit[slot] = -1;
+        result.push(s);
+      }
+    }
+    return result;
   }
 
   pushFoundation(slot, card) {

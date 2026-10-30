@@ -10,6 +10,11 @@
 // reachable position is explored or KlondikeSolver.MAX_MOVES moves have been
 // tried, collecting every win on the way.
 //
+// The search takes shortcuts (see SolverState.generateMoves), so "unwinnable"
+// is only reported after confirmUnwinnable has tried every legal move;
+// otherwise the result is "unknown". A winnable game is never reported as
+// unwinnable.
+//
 // Result graph:
 //   nodes[i] = { id, parent, move, depth, state, status, children: [ids], merges: [{ move, to }] }
 //   status:  "win"       a winning position
@@ -85,7 +90,31 @@ class KlondikeSolver {
     this.markPositionsThatReachAWin();
     this.winNode = this.winNodes.reduce((best, n) => (!best || n.depth < best.depth ? n : best), null);
     this.result = this.winNodes.length ? "winnable" : gaveUp ? "unknown" : "unwinnable";
+    if (this.result === "unwinnable" && !this.confirmUnwinnable()) {
+      this.result = "unknown";
+      this.unconfirmed = true;
+    }
     return this;
+  }
+
+  // Exhaustive search over every legal move (SolverState.allSuccessors).
+  // True only if every reachable position was visited and none is a win.
+  confirmUnwinnable(maxPositions = KlondikeSolver.MAX_CONFIRM_POSITIONS) {
+    const start = this.root.state;
+    const seen = new Set([start.key()]);
+    const stack = [start];
+    while (stack.length) {
+      const state = stack.pop();
+      if (state.isWon()) return false;
+      for (const next of state.allSuccessors()) {
+        const key = next.key();
+        if (seen.has(key)) continue;
+        if (seen.size >= maxPositions) return false;
+        seen.add(key);
+        stack.push(next);
+      }
+    }
+    return true;
   }
 
   markWin(node) {
@@ -125,4 +154,6 @@ class KlondikeSolver {
   }
 }
 // Total moves the search may try (including ones that lead to an already-seen position).
-KlondikeSolver.MAX_MOVES = 1000;
+KlondikeSolver.MAX_MOVES = 1500;
+// Positions confirmUnwinnable may visit before giving up (and reporting "unknown").
+KlondikeSolver.MAX_CONFIRM_POSITIONS = 50000;

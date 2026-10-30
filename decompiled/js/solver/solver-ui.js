@@ -55,6 +55,7 @@ class SolverPanel {
     if (s.result === "winnable")
       text = `<b class="solver-yes">Winnable</b> – ${s.winNodes.length} win${s.winNodes.length > 1 ? "s" : ""} found, shortest ${s.winNode.depth} moves.`;
     else if (s.result === "unwinnable") text = `<b class="solver-no">Not winnable</b> – every reachable position was explored.`;
+    else if (s.unconfirmed) text = `<b class="solver-unknown">Unknown</b> – no win found, but not every possible move could be checked.`;
     else text = `<b class="solver-unknown">Unknown</b> – gave up after trying ${s.maxMoves} moves.`;
     this.$panel.find(".solver-summary").html(
       `${text} <span class="solver-stats">${s.nodes.length} positions, ${s.movesTried} moves tried.</span>`,
