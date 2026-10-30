@@ -32,8 +32,8 @@ body {
   height: 36px;
   font-size: 0;
 }
-/* Game timer, top right (js/timer.js). Click toggles between the time and a dim "--:--". */
-.solitr-timer {
+/* Top right: "Re-play" (shown after a win) and the game timer. */
+.solitr-timer-area {
   /* Right edge lines up with the "Undo" text below: the menu bar contents are
      705px wide and menu items have 20px of right padding. */
   position: absolute;
@@ -41,6 +41,19 @@ body {
   left: 685px;
   transform: translateX(-100%);
   white-space: nowrap;
+}
+.solitr-replay {
+  display: none;
+  vertical-align: top;
+  margin: 7px 12px 0 0;
+}
+.solitr-replay.visible {
+  display: inline-block;
+}
+/* Game timer (js/timer.js). Click toggles between the time and a dim "--:--". */
+.solitr-timer {
+  display: inline-block;
+  vertical-align: top;
   font-size: 16px;
   line-height: 36px;
   color: #333;

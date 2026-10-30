@@ -52,8 +52,11 @@
         <span class="active solitr-tab solitaire-tab"
           ><span class="solitaire-icon">♠</span><span class="solitr-tab-bar-text">&nbsp;Solitaire</span></span
         >
-        <div id="game-timer" class="solitr-timer"
-          ><span class="solitr-timer-text">00:00</span><span class="solitr-timer-placeholder">--:--</span></div
+        <div class="solitr-timer-area"
+          ><a class="btn btn-success btn-xs solitr-replay" title="Play the same deal again">Re-play</a
+          ><div id="game-timer" class="solitr-timer"
+            ><span class="solitr-timer-text">00:00</span><span class="solitr-timer-placeholder">--:--</span></div
+          ></div
         >
       </div>
       <div class="solitr-menu-bar solitaire-menu-bar">
@@ -123,7 +126,7 @@
             <div class="score"></div>
           </div>
           <div class="modal-footer">
-            <a class="btn btn-success new-game-button" data-dismiss="modal">New Game</a>
+            <a class="btn btn-success new-game-button solitr-new-game">New Game</a>
           </div>
         </div>
       </div>

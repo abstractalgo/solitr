@@ -1,14 +1,15 @@
 // Klondike rules: dealing, what may be placed where, scoring, auto-finish, win check.
 
 class KlondikeModel extends SolitaireBaseModel {
-  constructor() {
+  // `deck`: the shuffled deck of an earlier game, to deal the same game again.
+  constructor(deck) {
     super();
     this.faceUpTableauPiles = range(this.constructor.numberOfTableauPiles).map(() => []);
     this.faceDownTableauPiles = range(this.constructor.numberOfTableauPiles).map(() => []);
     this.stock = [];
     this.waste = [];
     this.foundations = range(this.constructor.numberOfFoundations).map(() => []);
-    this.deck = shuffle(this.createDeck());
+    this.deck = deck || shuffle(this.createDeck());
   }
 
   // Standard (Windows-style) scoring. Points are per command, see executeCommand.

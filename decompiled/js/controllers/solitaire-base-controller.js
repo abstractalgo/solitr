@@ -86,9 +86,19 @@ class SolitaireBaseController {
     this.startGame(model);
   }
 
+  // Deals the current game's shuffle again (the "Re-play" button after a win).
+  // The deck holds the cards in their shuffled order; deal() never changes it.
+  replayGame() {
+    const model = new this.constructor.ModelClass(this.model.deck);
+    model.deal();
+    this.startGame(model);
+  }
+
   // Shows an already dealt model on the board (used by newGame and the deal generator).
   startGame(model) {
     this.model = model;
+    $("#win-modal").modal("hide");
+    $(".solitr-replay").removeClass("visible");
     for (const id in this.cardControllers || {}) this.cardControllers[id].destroy();
     this.cardControllers = {};
     for (const card of this.model.deck) {
@@ -299,11 +309,12 @@ class SolitaireBaseController {
     $(document).on("click touchstart", ".card:not(:animated)", fastClick(handleCardEvent(this.clickCard.bind(this))));
     $(document).on("dblclick", ".card:not(:animated)", handleCardEvent(this.dblclickCard.bind(this)));
     $(document).on("click touchstart", ".solitr-undo-button", fastClick(this.unlessSuspended(this.undo.bind(this))));
-    $(document).on(
-      "click touchstart",
-      ".solitr-new-game",
-      fastClick(this.unlessSuspended(protectNewGame(this.newGame.bind(this)))),
-    );
+    // Input stays suspended on a won board, but a new game may still be started.
+    const unlessBusy = (fn) => (...args) => {
+      if (!this.uiSuspended || this.model.finishedAt) fn(...args);
+    };
+    $(document).on("click touchstart", ".solitr-new-game", fastClick(unlessBusy(protectNewGame(this.newGame.bind(this)))));
+    $(document).on("click touchstart", ".solitr-replay", fastClick(unlessBusy(this.replayGame.bind(this))));
     this._registerDragAndDrop();
   }
 
@@ -483,8 +494,12 @@ class SolitaireBaseController {
     let win = "<p>Time: " + this.model.getTime() + "</p>";
     if (this.model.scoreForCommand && this.displayScore()) win += "<p>Score: " + this.model.score + "</p>";
     $("#win-modal .modal-body .score").html(win);
+    // The won board stays up (time stopped) with "Re-play" in the header;
+    // the modal's New Game button starts the next game.
+    window.GAME_IN_PROGRESS = false;
+    $(".solitr-undo-button").addClass("disabled");
+    $(".solitr-replay").addClass("visible");
     $("#win-modal").modal();
-    $("#win-modal").one("hidden.bs.modal", () => this.newGame());
   }
 
   optionsChanged() {
