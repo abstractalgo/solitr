@@ -137,13 +137,5 @@ KlondikeModel.cardsToTurn = null;
 KlondikeModel.numberOfFoundations = 4;
 KlondikeModel.numberOfTableauPiles = 7;
 
-class KlondikeTurnOneModel extends KlondikeModel {
-  // Turn-one games are penalised for going through the deck again.
-  scoreForCommand(cmd) {
-    return cmd.action === "turnOverWaste" ? -100 : super.scoreForCommand(cmd);
-  }
-}
-KlondikeTurnOneModel.cardsToTurn = 1;
-
 class KlondikeTurnThreeModel extends KlondikeModel {}
 KlondikeTurnThreeModel.cardsToTurn = 3;

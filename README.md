@@ -14,7 +14,7 @@ No build step. Open `decompiled/index.html` directly, or serve it:
 python3 -m http.server 8732 --directory decompiled   # http://localhost:8732/
 ```
 
-`index.html` plays Turn 3, and `index.html?turn=1` plays Turn 1.
+The game is Turn 3 only (the original site also had Turn 1; it was removed).
 
 ## original/
 
@@ -66,7 +66,7 @@ js/controllers/solitaire-base-controller.js
 js/controllers/klondike-controller.js
                                     Klondike geometry, stock/waste clicks, double-click to foundation
 js/rawdraggable.js                  thin jQuery UI mouse widget used for drag and drop
-js/main.js                          picks Turn 1/3, page-level handlers
+js/main.js                          starts the game, page-level handlers
 css/solitr.css                      header / menu / dialogs
 css/game.css                        table, card outlines
 css/cards-1x.css, cards-2x.css      card faces as data URIs (generated from images/)
@@ -80,8 +80,8 @@ vendor/                             libraries pulled from the original bundle
 | --------------------------------------- | ----------------------------------------------------------------------- |
 | Rules (what goes where)                 | `KlondikeModel.accepts`, `movedWithCard`                                |
 | Dealing / seeded deals                  | `KlondikeModel.deal`, `shuffle` in `util.js`                            |
-| Scoring                                 | `KlondikeModel.scoreForCommand`, `KlondikeTurnOneModel.scoreForCommand` |
-| Cards turned per click                  | `KlondikeTurnOneModel.cardsToTurn` / `KlondikeTurnThreeModel.cardsToTurn` |
+| Scoring                                 | `KlondikeModel.scoreForCommand`                                         |
+| Cards turned per click                  | `KlondikeTurnThreeModel.cardsToTurn`                                    |
 | Auto-finish behaviour                   | `KlondikeModel.nextAutoCommand`                                         |
 | Layout / spacing / fanning              | `calculateGeometry` in the base controller and `KlondikeController`     |
 | Animation speeds                        | `SolitaireBaseController.speeds`                                        |
@@ -96,7 +96,7 @@ dropped. Setting `window.SOLITR_WIN = true` makes the next move trigger the win 
 
 - Removed: Google Analytics, AdSense, Muscula error tracking, cookie banner, the Spider,
   Mahjong and Sudoku tabs, the old-browser shim, and an IE-only `unselectable` hack.
-- One page with `?turn=1` instead of two separate pages.
+- Turn 3 only: the Turn 1 variant and the Options switch between the two are removed.
 - Added `<meta charset="utf-8">`. The original page has no charset, so the ♠ in the tab can show
   as garbled text.
 - No About dialog (the original had the site owner's contact and company details, and the

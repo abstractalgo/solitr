@@ -190,46 +190,8 @@ span.solitr-tab.active {
   display: inline-block;
   position: relative;
 }
-.solitr-dropdown-button-item > .btn,
-.solitr-dropdown-button-item > .btn-group {
+.solitr-dropdown-button-item > .btn {
   margin-left: 20px;
-}
-
-/* "Turn 1" / "Turn 3" mini card icons in the Options dropdown */
-.turn-one-icon,
-.turn-three-icon {
-  position: relative;
-  top: 3px;
-  height: 16px;
-  display: inline-block;
-}
-.turn-one-icon {
-  width: 12px;
-}
-.turn-three-icon {
-  width: 18px;
-}
-.blank-card-icon,
-.blank-card-icon-1,
-.blank-card-icon-2,
-.blank-card-icon-3 {
-  border: 1px solid #222;
-  border-radius: 3px;
-  position: absolute;
-  width: 12px;
-  height: 16px;
-}
-.blank-card-icon-1 {
-  border-radius: 3px 0 0 3px;
-  border-right: none;
-}
-.blank-card-icon-2 {
-  left: 3px;
-  border-radius: 3px 0 0 3px;
-  border-right: none;
-}
-.blank-card-icon-3 {
-  left: 6px;
 }
 
 .undo-icon {

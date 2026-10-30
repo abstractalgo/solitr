@@ -85,8 +85,5 @@ class KlondikeController extends SolitaireBaseController {
   }
 }
 
-class KlondikeTurnOneController extends KlondikeController {}
-KlondikeTurnOneController.ModelClass = KlondikeTurnOneModel;
-
 class KlondikeTurnThreeController extends KlondikeController {}
 KlondikeTurnThreeController.ModelClass = KlondikeTurnThreeModel;
