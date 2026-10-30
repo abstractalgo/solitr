@@ -188,7 +188,12 @@ class SolitaireBaseController {
       }
     }
 
-    $(".solitr-undo-button").toggleClass("disabled", this.model.undoStack.length === 0 && this.previousGames.length === 0);
+    // With no moves to undo, the button goes back to the previous game instead.
+    const toPreviousGame = this.model.undoStack.length === 0 && this.previousGames.length > 0;
+    $(".solitr-undo-button")
+      .toggleClass("disabled", this.model.undoStack.length === 0 && this.previousGames.length === 0)
+      .attr("title", toPreviousGame ? "Back to the previous game" : "Undo the last move");
+    $(".solitr-undo-label").text(toPreviousGame ? "Prev" : "Undo");
     $("#game-score").toggleClass("active", this.displayScore());
     $("#game-score span").text("" + this.model.score);
     window.GAME_IN_PROGRESS = this.model.undoStack.length > 6;
