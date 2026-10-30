@@ -1,0 +1,53 @@
+# Solver move-ordering experiment (tools/solver-experiments). Runs on pushes to
+# the solver-experiments branch, or by hand from the Actions tab. Each variant
+# is split into shards that run in parallel; the summary job puts the
+# comparison table on the run's summary page.
+name: Solver experiments
+
+on:
+  push:
+    branches: [solver-experiments]
+  workflow_dispatch:
+    inputs:
+      cap:
+        description: Moves each search may try
+        default: "100000"
+
+env:
+  CAP: ${{ inputs.cap || '100000' }}
+  SHARDS: 4
+
+jobs:
+  ordering:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [base, uncAsc, kingLate, wasteFirst, stockEarly, foundLate, otherLast]
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: mkdir -p out && node tools/solver-experiments/ordering.js ${{ matrix.variant }} ${{ matrix.shard }} $SHARDS $CAP out/${{ matrix.variant }}-${{ matrix.shard }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ordering-${{ matrix.variant }}-${{ matrix.shard }}
+          path: out/
+
+  summary:
+    needs: ordering
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: ordering-*
+          path: results
+      - run: node tools/solver-experiments/compare.js results | tee -a "$GITHUB_STEP_SUMMARY"
