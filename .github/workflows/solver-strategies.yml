@@ -1,0 +1,59 @@
+# Solver search-strategy experiment (tools/solver-experiments/strategies.js):
+# depth-first vs limited discrepancy search vs restarts, on the same positions
+# as the move-ordering experiment. Runs on pushes to the solver-experiments
+# branch that touch it, or by hand from the Actions tab. The summary job puts
+# the comparison tables on the run's summary page.
+name: Solver strategies
+
+on:
+  push:
+    branches: [solver-experiments]
+    paths:
+      - tools/solver-experiments/lib.js
+      - tools/solver-experiments/strategies.js
+      - tools/solver-experiments/compare-strategies.js
+      - .github/workflows/solver-strategies.yml
+  workflow_dispatch:
+    inputs:
+      cap:
+        description: Moves each search may try
+        default: "100000"
+
+env:
+  CAP: ${{ inputs.cap || '100000' }}
+  SHARDS: 4
+
+jobs:
+  strategy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        strategy: [dfs, lds, lds-rank, restarts-geo, restarts-luby]
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: mkdir -p out && node --stack-size=65500 tools/solver-experiments/strategies.js ${{ matrix.strategy }} ${{ matrix.shard }} $SHARDS $CAP out/${{ matrix.strategy }}-${{ matrix.shard }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: strategy-${{ matrix.strategy }}-${{ matrix.shard }}
+          path: out/
+
+  summary:
+    needs: strategy
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: strategy-*
+          path: results
+      - run: node tools/solver-experiments/compare-strategies.js results | tee -a "$GITHUB_STEP_SUMMARY"
